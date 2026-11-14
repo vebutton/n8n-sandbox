@@ -59,9 +59,10 @@
   Activation is a separate call.
 
 ### XSUM
-- **T-XSUM-03:** check whether the Local File Trigger node is disabled on 2.x before
-  choosing the trigger. A schedule-plus-read-folder poll is the fallback. The inbox is
-  read-only, so skip a transcript when its summary already exists in the outbox. Waits
+- **T-XSUM-03:** trigger is a Schedule Trigger plus a read of the inbox folder, because
+  the Local File Trigger node is not available on this instance (checked in the UI on
+  2026-11-13). The inbox is read-only, so skip a transcript when its summary already
+  exists in the outbox. Waits
   on T-WFC-04.
 
 ## 3. Open questions

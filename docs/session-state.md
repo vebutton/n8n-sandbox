@@ -63,3 +63,14 @@
 - `/types/nodes.json` as a node-availability check from the CLI (needs a session cookie).
 
 **Commits:** the one made at the end of this thread (T-WFC-01).
+
+## 2026-11-13 — Local File Trigger check (CLI)
+
+- The operator searched the UI node panel: "Local File Trigger" does not appear. It is
+  excluded by n8n 2.x defaults (no `NODES_EXCLUDE` override in the container env).
+- Decision: T-XSUM-03 uses a Schedule Trigger plus a read of the inbox, skipping files
+  whose summary already exists in the outbox. Asking podmanager to enable the node was
+  not pursued: the poll is enough for a sandbox.
+
+**Commits:** `faab87f` (T-WFC-01), then the end-of-session commit recording this finding.
+Session ended here. Next session starts at T-WFC-02.

@@ -106,7 +106,8 @@ an existing track or must stand alone.
 
 **Last (2026-11-13):** T-WFC-01 done. Authenticated `GET /api/v1/workflows` returns 200
 with one workflow, `My workflow` (id `BUfTdWopbSCXMfMd`, inactive, manual trigger →
-HTTP Request). `.env.local.example` now lists only `N8N_API_KEY`.
+HTTP Request). `.env.local.example` now lists only `N8N_API_KEY`. Local File Trigger
+confirmed unavailable, so T-XSUM-03 will poll on a schedule.
 
 **Next session — pick up here:**
 1. Cold start: re-read CLAUDE.md, CLAUDE.local.md and `docs/n8n-instance.md`. Consult
@@ -118,10 +119,7 @@ HTTP Request). `.env.local.example` now lists only `N8N_API_KEY`.
    header to curl on stdin: `printf 'header = "X-N8N-API-KEY: %s"\n' "$N8N_API_KEY" |
    curl -sS -K - <url>`. Never put it in argv.
 4. T-WFC-02: the pull script, then T-WFC-03 (commit `My workflow`).
-5. Local File Trigger: ask whether the operator checked the UI node panel (`+` →
-   search "Local File Trigger"). The API key can't read the node catalog
-   (`/types/nodes.json` → 401). This feeds T-XSUM-03.
-6. Ask how the event went (on or after 2026-11-14). Its answers feed TODO.md §3.
+5. Ask how the event went (on or after 2026-11-14). Its answers feed TODO.md §3.
 
 **Continuity reminders:**
 - n8n is often **stopped**. Only one Podman machine runs at a time on this host, so n8n
@@ -129,9 +127,9 @@ HTTP Request). `.env.local.example` now lists only `N8N_API_KEY`.
 - File nodes may only use paths under `/home/node/.n8n-files`. The inbox is read-only,
   so a workflow cannot move or delete processed transcripts. Track processed files
   another way, or have the operator clear them by hand.
-- From memory, unverified: n8n 2.x disables the Local File Trigger node by default.
-  Check this before choosing the T-XSUM-03 trigger, and fall back to a schedule-plus-read
-  poll if it is disabled. Enabling the node is a podmanager change.
+- Verified 2026-11-13 (operator, UI node panel): the Local File Trigger node is not
+  available. n8n 2.x excludes it by default and no `NODES_EXCLUDE` override is set.
+  T-XSUM-03 uses a schedule-plus-read poll. Enabling the node is a podmanager change.
 - From memory, unverified: the workflow update endpoint rejects read-only fields such as
   `id`, `active`, `tags` and timestamps. Strip them on push (T-WFC-04).
 - Exports reference credentials by ID and name, not by secret value, but pinned data and
