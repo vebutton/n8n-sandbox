@@ -14,8 +14,8 @@ running, addresses, reach, rules) is described in [n8n-instance.md](n8n-instance
 - **No Claude inside n8n.** There is no Anthropic API key, and a subscription can't be
   used from n8n. In-workflow AI uses the existing `n8n Assistant model` credential
   (local oMLX). Keep prompts small, because the model is shared.
-- **Secrets** go in `.env.local` only (gitignored). A tracked `.env.local.example` shows
-  the variable names.
+- **Secrets** go in `.env.local` only (gitignored, ansible-vault encrypted). A tracked
+  `.env.local.example` shows the variable names. Scripts read them from the environment.
 - **Tooling:** Bash + `curl` + `jq`.
 
 ## Track 1 — Workflows as code (WFC)

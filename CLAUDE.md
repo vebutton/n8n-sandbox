@@ -43,8 +43,10 @@ Claude Code CLI on the Mac, plus the n8n web UI at `http://localhost:5678` (use
 
 ## Key Integrations
 - **n8n public REST API** at `http://localhost:5678/api/v1`, authenticated with the
-  `X-N8N-API-KEY` header. Swagger is at `/api/v1/docs/`. The key goes in `.env.local`
-  (gitignored) as `N8N_API_KEY`. Never pass it on a command line.
+  `X-N8N-API-KEY` header. Swagger is at `/api/v1/docs/`. The key is `N8N_API_KEY` in the
+  vault-encrypted `.env.local` (gitignored). The operator sources it into the shell, and
+  scripts read `$N8N_API_KEY` from the environment and pass the header to curl on stdin
+  (`curl -K -`). Never pass it on a command line.
 - **Local LLM**: oMLX, OpenAI-compatible, reached from n8n at
   `http://host.containers.internal:8000/v1`. It is already set up as the credential
   **`n8n Assistant model`**. Use that credential in AI nodes and don't create a second
@@ -102,8 +104,9 @@ an existing track or must stand alone.
 > Forward-looking operating context only. Archaeology lives in `docs/session-state.md`.
 > Task state lives in `TODO.md`.
 
-**Last:** Project set up. The n8n instance was rebuilt by podmanager with an inbox and an
-outbox, and no workflow work has started.
+**Last (2026-11-13):** T-WFC-01 done. Authenticated `GET /api/v1/workflows` returns 200
+with one workflow, `My workflow` (id `BUfTdWopbSCXMfMd`, inactive, manual trigger →
+HTTP Request). `.env.local.example` now lists only `N8N_API_KEY`.
 
 **Next session — pick up here:**
 1. Cold start: re-read CLAUDE.md, CLAUDE.local.md and `docs/n8n-instance.md`. Consult
@@ -111,9 +114,14 @@ outbox, and no workflow work has started.
 2. Check that n8n is up: `curl -fsS -o /dev/null -w '%{http_code}\n'
    http://localhost:5678/healthz/readiness` should print 200. If it doesn't, ask the
    operator to start it from podmanager. Don't start it from here.
-3. Ask how the event went. Its answers feed the open questions in TODO.md §3.
-4. T-WFC-01: get the API key into `.env.local` and verify an authenticated
-   `GET /api/v1/workflows`. Everything else in Track 1 needs it.
+3. Confirm `N8N_API_KEY` is set (presence only, via `printenv K >/dev/null`). Pass the
+   header to curl on stdin: `printf 'header = "X-N8N-API-KEY: %s"\n' "$N8N_API_KEY" |
+   curl -sS -K - <url>`. Never put it in argv.
+4. T-WFC-02: the pull script, then T-WFC-03 (commit `My workflow`).
+5. Local File Trigger: ask whether the operator checked the UI node panel (`+` →
+   search "Local File Trigger"). The API key can't read the node catalog
+   (`/types/nodes.json` → 401). This feeds T-XSUM-03.
+6. Ask how the event went (on or after 2026-11-14). Its answers feed TODO.md §3.
 
 **Continuity reminders:**
 - n8n is often **stopped**. Only one Podman machine runs at a time on this host, so n8n
@@ -128,6 +136,10 @@ outbox, and no workflow work has started.
   `id`, `active`, `tags` and timestamps. Strip them on push (T-WFC-04).
 - Exports reference credentials by ID and name, not by secret value, but pinned data and
   hard-coded node values do get exported. Check pulls before committing.
+- Secrets: `.env.local` is ansible-vault encrypted. There is no `ansible.cfg` here, so
+  use `--vault-password-file collateral/vault-pass.sh` (a macOS dialog). Never decrypt
+  or read it from Claude. The keys arrive as env vars, and checks report only set/not set.
+- The shell is zsh, so `${!k}` indirection fails. Use `printenv "$k" >/dev/null`.
 
 **Session continuity:** Next session is a cold start, so re-read CLAUDE.md before doing
 anything. Sessions are never re-entered. End-of-session updates cover three layers: this

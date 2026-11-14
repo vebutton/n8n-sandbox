@@ -34,7 +34,7 @@
 - [ ] T-PROJ-01 Create the GitHub remote and push the first commit (visibility undecided)
 
 ### WFC — Track 1: Workflows as code
-- [ ] T-WFC-01 Create an n8n API key, store it in `.env.local` with a tracked `.env.local.example`, and verify an authenticated `GET /api/v1/workflows`
+- [x] T-WFC-01 Create an n8n API key, store it in `.env.local` with a tracked `.env.local.example`, and verify an authenticated `GET /api/v1/workflows` (resolved 2026-11-13: GET returns 200 with the key passed to curl on stdin; template lists only `N8N_API_KEY`)
 - [ ] T-WFC-02 Pull script: export every workflow from n8n into `workflows/<slug>.json`, normalised for clean diffs
 - [ ] T-WFC-03 Commit the existing manual-trigger → HTTP-request workflow as the first example
 - [ ] T-WFC-04 Push script: create or update an n8n workflow from a repo JSON file
@@ -48,13 +48,12 @@
 ## 2. Item detail
 
 ### WFC
-- **T-WFC-01:** the operator creates the key in the UI (Settings → n8n API) and pastes
-  it into `.env.local` themselves. It never passes through chat or a command line. Scripts
-  read it from the file.
 - **T-WFC-02:** strip volatile fields (timestamps, `versionId`, and similar) so pulls
   diff cleanly. Choose a filename slug from the workflow name, and keep the n8n `id` in
   the file so push can tell an update from a create. Flag pinned data and hard-coded
-  values before commit.
+  values before commit. Like every script here, it reads `$N8N_API_KEY` from the
+  environment (the operator sources the vault) and passes the header to curl on stdin
+  (`curl -K -`), never in argv.
 - **T-WFC-04:** create a workflow that has no `id`, and update one that has an `id`. Send
   only the fields the API accepts on update (see the CLAUDE.md continuity reminder).
   Activation is a separate call.
@@ -76,8 +75,6 @@
   to Unscheduled.
 - **Does the event provide a lab sandbox?** The local instance is ready either way, so
   this only decides where to experiment on the day. Accepted as event research.
-- **Does the API key flow match the docs on 2.47.7?** The handoff's Settings path and
-  header come from n8n's docs. Only the 401 without a key has been tested. → T-WFC-01
 
 ## 4. Standing operations
 Recurring work: no IDs, no checkboxes, tracked by last-run date.
