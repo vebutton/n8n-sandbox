@@ -35,7 +35,7 @@
 
 ### WFC — Track 1: Workflows as code
 - [x] T-WFC-01 Create an n8n API key, store it in `.env.local` with a tracked `.env.local.example`, and verify an authenticated `GET /api/v1/workflows` (resolved 2026-11-13: GET returns 200 with the key passed to curl on stdin; template lists only `N8N_API_KEY`)
-- [ ] T-WFC-02 Pull script: export every workflow from n8n into `workflows/<slug>.json`, normalised for clean diffs
+- [x] T-WFC-02 Pull script: export every workflow from n8n into `workflows/<slug>.json`, normalised for clean diffs (resolved 2026-11-15: `scripts/pull.sh`; two consecutive pulls diff clean)
 - [ ] T-WFC-03 Commit the existing manual-trigger → HTTP-request workflow as the first example
 - [ ] T-WFC-04 Push script: create or update an n8n workflow from a repo JSON file
 - [ ] T-WFC-05 Round-trip check: author a small workflow in git, push it, run it in the UI, pull it back, and confirm a clean diff
@@ -82,7 +82,7 @@ Recurring work: no IDs, no checkboxes, tracked by last-run date.
 
 | Operation | Cadence / trigger | Last run | Notes |
 |---|---|---|---|
-| Pull workflows into git | After any edit in the n8n UI | Never | Needs T-WFC-02 |
+| Pull workflows into git | After any edit in the n8n UI | 2026-11-15 | `scripts/pull.sh`; review its WARN and stale lines before committing |
 
 ## 5. Unscheduled
 Ideas that came up but aren't committed work. No ID until promoted into a track.
