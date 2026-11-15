@@ -48,9 +48,13 @@ Claude Code CLI on the Mac, plus the n8n web UI at `http://localhost:5678` (use
   scripts read `$N8N_API_KEY` from the environment and pass the header to curl on stdin
   (`curl -K -`). Never pass it on a command line.
 - **Local LLM**: oMLX, OpenAI-compatible, reached from n8n at
-  `http://host.containers.internal:8000/v1`. It is already set up as the credential
-  **`n8n Assistant model`**. Use that credential in AI nodes and don't create a second
-  one. The model is shared with another project, so keep prompts small.
+  `http://host.containers.internal:8000/v1`. The workflow credential is **`oMLX local`**
+  (id `4w0q11tHyjp3OV4R`, type OpenAI with a custom Base URL; the model is picked per
+  node). Use it in AI nodes and don't create a second one. The model is shared with
+  another project, so keep prompts small. The `n8n Assistant model` named in
+  `docs/n8n-instance.md` is not a workflow credential. It is the model for n8n's
+  built-in Assistant (the `instance-ai` module), set in the UI and pointed at oMLX.
+  The Assistant also needs a code sandbox, which is not set up (see TODO.md Unscheduled).
 - **No Anthropic API key**, and a Claude subscription cannot be used from n8n. Don't
   design anything that assumes Claude inside n8n.
 
@@ -130,6 +134,10 @@ confirmed unavailable, so T-XSUM-03 will poll on a schedule.
 - Verified 2026-11-13 (operator, UI node panel): the Local File Trigger node is not
   available. n8n 2.x excludes it by default and no `NODES_EXCLUDE` override is set.
   T-XSUM-03 uses a schedule-plus-read poll. Enabling the node is a podmanager change.
+- Verified 2026-11-15: an OpenAI-type credential's Base URL needs the scheme
+  (`http://host.containers.internal:8000/v1`). Without `http://` the credential test
+  fails with `ERR_BAD_REQUEST`. `POST /api/v1/credentials/{id}/test` checks a credential
+  without exposing its secrets.
 - From memory, unverified: the workflow update endpoint rejects read-only fields such as
   `id`, `active`, `tags` and timestamps. Strip them on push (T-WFC-04).
 - Exports reference credentials by ID and name, not by secret value, but pinned data and

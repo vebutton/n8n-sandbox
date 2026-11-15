@@ -42,7 +42,7 @@
 
 ### XSUM — Track 2: Transcript summary
 - [x] T-XSUM-01 Script the container recreate with Mac inbox/outbox bind mounts, keeping `n8n_data`, the image tag and the `127.0.0.1:5678` binding (resolved 2026-11-13: done by podmanager, which owns the instance; inbox read-only and outbox read-write under `/home/node/.n8n-files`; see `docs/n8n-instance.md`)
-- [x] T-XSUM-02 Make the local MLX model available as a credential for in-workflow model nodes (resolved 2026-11-13: the existing `n8n Assistant model` credential, oMLX at `host.containers.internal:8000/v1`, serves both the builder and workflow nodes)
+- [x] T-XSUM-02 Make the local MLX model available as a credential for in-workflow model nodes (resolved 2026-11-13: the existing `n8n Assistant model` credential, oMLX at `host.containers.internal:8000/v1`, serves both the builder and workflow nodes; corrected 2026-11-15: no credential by that name exists, and workflow nodes use `oMLX local`, created in the UI)
 - [ ] T-XSUM-03 Build the transcript summary workflow (inbox → local LLM → outbox), authored and pushed via WFC
 
 ## 2. Item detail
@@ -91,7 +91,11 @@ Ideas that came up but aren't committed work. No ID until promoted into a track.
 - Try n8n's self-hosted AI starter kit (extra containers).
 - Custom n8n nodes in TypeScript.
 - Ask podmanager to set up the code sandbox service, if the Assistant or Agents need to
-  run code or handle files.
+  run code or handle files. The n8n Assistant requires it (it runs the Assistant's code,
+  not the model). The options are K8s + Sysbox, Daytona (third-party hosted, data leaves
+  the host), or the bundled Compose stack (privileged Docker-in-Docker, dev/test only,
+  untested on Podman). Source: n8n docs, "Set up n8n Assistant". Low value while the
+  model is small, since n8n warns that small models often build workflows that don't run.
 
 ## 6. Archive
 Closed items whose resolution no longer informs current work.

@@ -12,7 +12,7 @@ running, addresses, reach, rules) is described in [n8n-instance.md](n8n-instance
 - **Git is the durable copy.** Workflow data lives in a VM volume on a learning
   instance, so anything worth keeping is pulled into `workflows/`.
 - **No Claude inside n8n.** There is no Anthropic API key, and a subscription can't be
-  used from n8n. In-workflow AI uses the existing `n8n Assistant model` credential
+  used from n8n. In-workflow AI uses the `oMLX local` credential
   (local oMLX). Keep prompts small, because the model is shared.
 - **Secrets** go in `.env.local` only (gitignored, ansible-vault encrypted). A tracked
   `.env.local.example` shows the variable names. Scripts read them from the environment.
@@ -52,7 +52,7 @@ n8n, and the summary is written to the outbox.
   summary already exists in the outbox.
 - **Trigger choice:** confirm whether n8n 2.x ships the Local File Trigger disabled. If
   it does, poll on a schedule rather than ask for an instance change.
-- **Model:** the `n8n Assistant model` credential, through an OpenAI-compatible chat
+- **Model:** the `oMLX local` credential, through an OpenAI-compatible chat
   model node. Keep the prompt small, and handle a transcript too long for the model's
   context by truncating or chunking it.
 - **Authoring:** the workflow is built and pushed through Track 1 tooling.
