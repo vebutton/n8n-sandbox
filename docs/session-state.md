@@ -143,4 +143,13 @@ Session ended here. Next session starts at T-WFC-02.
 
 **Commits:** `ceb45e1`, `6071905`, `fafe935`, `07b045a`, `427e172`, `2b82f51`,
 `9d9bdfd`, plus this end-of-session commit. All pushed.
-Session ended here. Next session: get the operator's prompt, then T-XSUM-03.
+
+**After close (same day):** the operator listed four ideas from the event. Agreed: a new
+Track 3, Price watch (`PRICE`, may depend on WFC), with T-PRICE-01 (choose the price
+source and alert channel) and T-PRICE-02 (build the workflow), ahead of T-XSUM-03
+because of Black Friday on 2026-11-27. Demo-environment setup, CRM brief and
+conference-contact capture went to Unscheduled, each with its blocker. Removed the
+Unscheduled line "Wire the AI Agent node to the local LLM": the chat-test workflow
+does it. Reasoning: inbound is blocked, so phone-driven ideas use polling triggers
+(IMAP, Calendar). Scraping Amazon was flagged as against its terms and fragile.
+Session ended here. Next session: T-PRICE-01, then the operator's prompt for T-XSUM-03.

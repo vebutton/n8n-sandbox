@@ -99,8 +99,16 @@ Claude Code CLI on the Mac, plus the n8n web UI at `http://localhost:5678` (use
 - **Depends on:** Track 1 (may depend). Its workflow is authored and pushed as code via
   WFC.
 
-**Further tracks:** None yet. When adding one, state explicitly whether it may depend on
-an existing track or must stand alone.
+### Track 3 — Price watch (PRICE)
+- **Objective:** n8n checks the prices of chosen Amazon products on a schedule and alerts
+  the operator when one drops to a target price. Aimed at Black Friday (2026-11-27).
+- **Status:** Not started. The first step is choosing the price source and the alert
+  channel (T-PRICE-01). Deadline-driven, so it goes ahead of T-XSUM-03.
+- **Depends on:** Track 1 (may depend). Its workflow is authored and pushed as code via
+  WFC.
+
+**Further tracks:** When adding one, state explicitly whether it may depend on an
+existing track or must stand alone.
 
 ---
 
@@ -125,10 +133,12 @@ GitHub remote is in sync. In n8n: `My workflow`, `Chat test (local LLM)`,
 3. Confirm `N8N_API_KEY` is set (presence only, via `printenv K >/dev/null`). Pass the
    header to curl on stdin: `printf 'header = "X-N8N-API-KEY: %s"\n' "$N8N_API_KEY" |
    curl -sS -K - <url>`. Never put it in argv.
-4. **Remind the operator to bring the real summary prompt** they use in another project.
+4. **T-PRICE-01 first (Black Friday is 2026-11-27):** settle the price source, alert
+   channel and uptime with the operator (options in TODO.md item detail), then T-PRICE-02.
+5. **Remind the operator to bring the real summary prompt** they use in another project.
    T-XSUM-03 is on hold until they share it; then build it into the summary workflow
    with the schedule trigger and skip-if-summarised.
-5. Ask how the event went (2026-11-14; not asked yet). Its answers feed TODO.md §3.
+6. Ask how the event went (2026-11-14; not asked yet). Its answers feed TODO.md §3.
 
 **Continuity reminders:**
 - Workflow loop: after UI edits, `scripts/pull.sh` → review WARN/stale lines → commit →

@@ -45,6 +45,10 @@
 - [x] T-XSUM-02 Make the local MLX model available as a credential for in-workflow model nodes (resolved 2026-11-13: the existing `n8n Assistant model` credential, oMLX at `host.containers.internal:8000/v1`, serves both the builder and workflow nodes; corrected 2026-11-15: no credential by that name exists, and workflow nodes use `oMLX local`, created in the UI)
 - [ ] T-XSUM-03 Build the transcript summary workflow (inbox → local LLM → outbox), authored and pushed via WFC
 
+### PRICE — Track 3: Price watch
+- [ ] T-PRICE-01 Choose the price source and the alert channel for the price watch
+- [ ] T-PRICE-02 Build the price-watch workflow (schedule → price lookup → threshold → alert and log), authored and pushed via WFC
+
 ## 2. Item detail
 
 ### WFC
@@ -66,6 +70,19 @@
   (manual trigger, works end to end) and push changes with `scripts/push.sh`.
   **On hold (2026-11-15):** waits on the operator's real summary prompt, which they use
   in another project. Get it from them before starting.
+
+### PRICE
+- **Deadline:** Black Friday is 2026-11-27. Priority is above T-XSUM-03 until then.
+- **T-PRICE-01:** decide three things with the operator:
+  - **Price source.** Keepa API (paid, reliable; price from memory around €20/month),
+    Amazon Product Advertising API (needs an Associates account with sales), or scraping
+    product pages (against Amazon's terms and blocked by CAPTCHAs, so expect it to break).
+  - **Alert channel.** Gmail, Slack or Telegram via their APIs (outbound works; only SMTP
+    is unavailable), or a file in the outbox.
+  - **Uptime.** Alerts only fire while the `n8n` Podman machine runs, so it has to stay
+    up through the sale week.
+- **T-PRICE-02:** waits on T-PRICE-01. Inputs are a product list (ASIN and target price).
+  Log each check so price history is visible.
 
 ## 3. Open questions
 - **Where should summaries go?** The outbox is the default and now exists. Email isn't
@@ -90,7 +107,6 @@ Recurring work: no IDs, no checkboxes, tracked by last-run date.
 
 ## 5. Unscheduled
 Ideas that came up but aren't committed work. No ID until promoted into a track.
-- Wire the AI Agent node to the local LLM. It is a node, not a separate container.
 - Let Claude drive n8n over MCP instead of the REST API, depending on what the event shows.
 - Try n8n's self-hosted AI starter kit (extra containers).
 - Custom n8n nodes in TypeScript.
@@ -100,6 +116,17 @@ Ideas that came up but aren't committed work. No ID until promoted into a track.
   the host), or the bundled Compose stack (privileged Docker-in-Docker, dev/test only,
   untested on Podman). Source: n8n docs, "Set up n8n Assistant". Low value while the
   model is small, since n8n warns that small models often build workflows that don't run.
+- **Demo environment setup before a scheduled demo.** Google Calendar trigger (polls) →
+  find demo events → SSH or HTTP calls that run the setup (Ansible, cluster APIs). Needs a
+  calendar credential and access from the container to the lab. The Execute Command node
+  may be disabled by default in 2.x (from memory), like the Local File Trigger.
+- **CRM brief before a customer call.** Calendar trigger → Salesforce node (account,
+  opportunities, recent activity) → local LLM writes a brief → outbox or Slack. Needs a
+  Salesforce connected app (admin approval). The local model keeps CRM data on the host.
+- **Conference "bump" to a contact list.** n8n can't be reached from a phone, so send the
+  contact by email: IMAP trigger polls the inbox → LLM pulls out name, company and role →
+  Google Sheet or file. Card or badge photos would need a vision model (oMLX support
+  unknown).
 
 ## 6. Archive
 Closed items whose resolution no longer informs current work.
