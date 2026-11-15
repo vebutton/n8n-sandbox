@@ -123,6 +123,9 @@ manual transcript-summary workflow on the local model. The model credential is
 `oMLX local` (renamed; the broken duplicate deleted). T-PROJ-01 closed: the public
 GitHub remote is in sync. In n8n: `My workflow`, `Chat test (local LLM)`,
 `Transcript summary (inbox to outbox)`, `Round-trip check`, all in `workflows/`.
+Later the same day: Track 3 (price watch) was added for Black Friday. The event turned
+out to be a presentation only. podmanager's 2026-11-15 handoff makes pull this
+instance's workflow backup.
 
 **Next session — pick up here:**
 1. Cold start: re-read CLAUDE.md, CLAUDE.local.md and `docs/n8n-instance.md`. Consult
