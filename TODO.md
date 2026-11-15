@@ -36,7 +36,7 @@
 ### WFC — Track 1: Workflows as code
 - [x] T-WFC-01 Create an n8n API key, store it in `.env.local` with a tracked `.env.local.example`, and verify an authenticated `GET /api/v1/workflows` (resolved 2026-11-13: GET returns 200 with the key passed to curl on stdin; template lists only `N8N_API_KEY`)
 - [x] T-WFC-02 Pull script: export every workflow from n8n into `workflows/<slug>.json`, normalised for clean diffs (resolved 2026-11-15: `scripts/pull.sh`; two consecutive pulls diff clean)
-- [ ] T-WFC-03 Commit the existing manual-trigger → HTTP-request workflow as the first example
+- [x] T-WFC-03 Commit the existing manual-trigger → HTTP-request workflow as the first example (resolved 2026-11-15: `workflows/my-workflow.json`, committed with the chat-test and transcript-summary workflows)
 - [ ] T-WFC-04 Push script: create or update an n8n workflow from a repo JSON file
 - [ ] T-WFC-05 Round-trip check: author a small workflow in git, push it, run it in the UI, pull it back, and confirm a clean diff
 

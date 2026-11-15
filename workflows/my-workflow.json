@@ -1,0 +1,52 @@
+{
+  "active": false,
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "HTTP Request",
+            "type": "main"
+          }
+        ]
+      ]
+    }
+  },
+  "id": "BUfTdWopbSCXMfMd",
+  "name": "My workflow",
+  "nodes": [
+    {
+      "id": "944452da-9f73-4acf-acc6-fe141223fbd3",
+      "name": "HTTP Request",
+      "parameters": {
+        "options": {},
+        "url": "https://google.com"
+      },
+      "position": [
+        224,
+        0
+      ],
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5
+    },
+    {
+      "id": "68e1894d-eaa0-4f5e-8de9-644bc1aaddcf",
+      "name": "When clicking ‘Execute workflow’",
+      "parameters": {},
+      "position": [
+        0,
+        0
+      ],
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "binaryMode": "separate",
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": []
+}
