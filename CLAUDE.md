@@ -95,7 +95,7 @@ Claude Code CLI on the Mac, plus the n8n web UI at `http://localhost:5678` (use
   the local LLM, and the summary is written to the outbox.
 - **Status:** A manual-trigger summary workflow works end to end (inbox → `oMLX local` →
   outbox). T-XSUM-03 (schedule + skip-if-summarised) is on hold for the operator's real
-  prompt. If the event provides its own lab sandbox, try it there too.
+  prompt.
 - **Depends on:** Track 1 (may depend). Its workflow is authored and pushed as code via
   WFC.
 
@@ -135,10 +135,9 @@ GitHub remote is in sync. In n8n: `My workflow`, `Chat test (local LLM)`,
    curl -sS -K - <url>`. Never put it in argv.
 4. **T-PRICE-01 first (Black Friday is 2026-11-27):** settle the price source, alert
    channel and uptime with the operator (options in TODO.md item detail), then T-PRICE-02.
-5. **Remind the operator to bring the real summary prompt** they use in another project.
-   T-XSUM-03 is on hold until they share it; then build it into the summary workflow
-   with the schedule trigger and skip-if-summarised.
-6. Ask how the event went (2026-11-14; not asked yet). Its answers feed TODO.md §3.
+5. **Remind the operator to bring the real summary prompt** they use in their macalla
+   project. T-XSUM-03 is on hold until they share it; then build it into the summary
+   workflow with the schedule trigger and skip-if-summarised.
 
 **Continuity reminders:**
 - Workflow loop: after UI edits, `scripts/pull.sh` → review WARN/stale lines → commit →
@@ -166,6 +165,13 @@ GitHub remote is in sync. In n8n: `My workflow`, `Chat test (local LLM)`,
 - Observed 2026-11-15: the editor has no Save button (from memory: it autosaves drafts,
   and Publish puts a version live). The UI offers only Archive on a live workflow;
   archive-then-`DELETE` via the API removes it for good, executions included.
+- Per the 2026-11-15 handoff, `scripts/pull.sh` + commit + push is the instance's
+  workflow backup of record. Run it after UI edits. Archived workflows are skipped, so
+  they're only in podmanager's volume export.
+- Restoring into a fresh instance (handoff 2026-11-15): credentials aren't in the
+  backup. Re-create `oMLX local` in the UI (Base URL with `http://`, oMLX key). It gets
+  a new id, so the model nodes in `workflows/*.json` need re-pointing in the UI or the
+  id updated before pushing (inferred, not tested).
 - Exports reference credentials by ID and name, not by secret value, but pinned data and
   hard-coded node values do get exported. Check pulls before committing.
 - Secrets: `.env.local` is ansible-vault encrypted. There is no `ansible.cfg` here, so

@@ -69,7 +69,7 @@
   exists in the outbox. Start from `workflows/transcript-summary-inbox-to-outbox.json`
   (manual trigger, works end to end) and push changes with `scripts/push.sh`.
   **On hold (2026-11-15):** waits on the operator's real summary prompt, which they use
-  in another project. Get it from them before starting.
+  in their macalla project. Get it from them before starting.
 
 ### PRICE
 - **Deadline:** Black Friday is 2026-11-27. Priority is above T-XSUM-03 until then.
@@ -88,22 +88,20 @@
 - **Where should summaries go?** The outbox is the default and now exists. Email isn't
   available (no SMTP). A note app would mean an API reached over the internet.
   → T-XSUM-03
-- **Can a small local model drive n8n's AI workflow builder at all?** Ask at the event.
-  Accepted as event research, with no item. Partly answered 2026-11-15: the Assistant
+- **Can a small local model drive n8n's AI workflow builder at all?** The event didn't
+  cover it (presentation only). Partly answered 2026-11-15: the Assistant
   accepts oMLX but warns that small models often build workflows that don't run, and it
   also needs a code sandbox (see Unscheduled).
 - **What MCP options exist for Claude to drive n8n directly?** n8n as an MCP server, or
-  community MCP servers. Ask at the event, since these change fast. If promising, it goes
-  to Unscheduled.
-- **Does the event provide a lab sandbox?** The local instance is ready either way, so
-  this only decides where to experiment on the day. Accepted as event research.
+  community MCP servers. The event didn't cover it, so research it directly; these change
+  fast. If promising, it goes to Unscheduled.
 
 ## 4. Standing operations
 Recurring work: no IDs, no checkboxes, tracked by last-run date.
 
 | Operation | Cadence / trigger | Last run | Notes |
 |---|---|---|---|
-| Pull workflows into git | After any edit in the n8n UI | 2026-11-15 | `scripts/pull.sh`; review its WARN and stale lines before committing |
+| Pull workflows into git | After any edit in the n8n UI | 2026-11-15 | `scripts/pull.sh`, then commit and push; review its WARN and stale lines first. This is the workflow backup of record (handoff 2026-11-15). Archived workflows are skipped |
 
 ## 5. Unscheduled
 Ideas that came up but aren't committed work. No ID until promoted into a track.

@@ -152,4 +152,18 @@ conference-contact capture went to Unscheduled, each with its blocker. Removed t
 Unscheduled line "Wire the AI Agent node to the local LLM": the chat-test workflow
 does it. Reasoning: inbound is blocked, so phone-driven ideas use polling triggers
 (IMAP, Calendar). Scraping Amazon was flagged as against its terms and fragile.
-Session ended here. Next session: T-PRICE-01, then the operator's prompt for T-XSUM-03.
+
+**Event debrief (same day):** the 2026-11-14 event was a presentation only, with no
+hands-on or lab sandbox. The presenter demoed an Ollama agent, which is how the operator
+worked out wiring oMLX through an OpenAI-type credential. The TODO §3 lab-sandbox question
+was dropped as answered. The builder and MCP questions stay open, since the event didn't
+cover them. The T-XSUM-03 prompt comes from the operator's macalla project. Also created
+the gitignored `.atlas/overview.md` (Atlas create mode).
+
+**Handoff update (same day):** podmanager's 2026-11-15 handoff (`collateral/20261115-handoff.md`)
+replaced `docs/n8n-instance.md`. Changes: telemetry is off; this project's pull is now
+the workflow backup of record; credentials aren't in that backup and must be
+re-created on restore. The handoff still calls `n8n Assistant model` a credential. That
+correction is still to be raised with podmanager. `reminders/` was gitignored for
+`/triage-sheet`, and the first sheet (v1) was generated.
+Session ended here. Next session: T-PRICE-01, then the macalla prompt for T-XSUM-03.

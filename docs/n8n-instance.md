@@ -2,7 +2,8 @@
 
 For a project that builds workflows on the local n8n learning instance. podmanager owns
 the container, the machine and the data; the using project owns its workflows and its own
-API key. Copy this file into that project (e.g. its `docs/`). State as of 2026-11-13 (inbox/outbox added the same day).
+API key. Copy this file into that project (e.g. its `docs/`). State as of 2026-11-15 (inbox/outbox 2026-11-13; workflow backups and telemetry
+2026-11-15).
 
 ## What is running
 - n8n `2.47.7` (upstream `docker.io/n8nio/n8n`, digest
@@ -72,7 +73,7 @@ credentials by ID and name, not by secret value, but check exports before commit
 - **Email:** no SMTP. No invites or password resets by email.
 - **Paid features:** the free community activation key was skipped (no folders, no
   advanced debugging, no execution search).
-- Telemetry to n8n is on (default). It may be turned off after 2026-11-14.
+- Telemetry to n8n is off (`N8N_DIAGNOSTICS_ENABLED=false`, since 2026-11-15).
 
 ## Rules for the using project
 - **Don't manage the container or the machine.** No `podman machine start/stop`, no
@@ -81,10 +82,16 @@ credentials by ID and name, not by secret value, but check exports before commit
   starts it from podmanager (`scripts/machine-switch.sh n8n`, then the Start block in
   `images/n8n/run.md`).
 - **Ask podmanager for any change to the instance:** environment variables, ports, host
-  mounts, the sandbox service, community nodes, upgrades (version is pinned), backups.
+  mounts, the sandbox service, community nodes, upgrades (version is pinned), volume
+  backups.
 - **The encryption key is podmanager's.** The using project never needs
   `N8N_ENCRYPTION_KEY`; it only needs its own API key.
-- **Data lives in the VM.** Treat workflows in git as the durable copy. podmanager exports
-  the volume before any machine removal, but this is a learning instance, not a service.
+- **Data lives in the VM.** Treat workflows in git as the durable copy. The using project
+  backs up its own workflows into its repo, through the REST API with its own key (since
+  2026-11-15). podmanager exports the volume before any machine removal, but this is a
+  lab instance, not a service.
+- **Credentials are not in that backup.** The API never returns secret values, so a
+  workflow restored into a fresh instance needs its credentials re-created in the UI.
+  Only podmanager's volume export carries them, readable only with the vault key.
 - It runs only while the operator uses it. Expect it to be stopped when another machine
-  is in use.
+  (e.g. `opencode`) is in use.
