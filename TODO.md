@@ -31,7 +31,7 @@
 ## 1. Items
 
 ### PROJ — Project and repo plumbing
-- [ ] T-PROJ-01 Create the GitHub remote and push the first commit (visibility undecided)
+- [x] T-PROJ-01 Create the GitHub remote and push the first commit (visibility undecided) (resolved 2026-11-15: public repo, `origin` on GitHub; the first commit was pushed 2026-11-14, the register was just not updated)
 
 ### WFC — Track 1: Workflows as code
 - [x] T-WFC-01 Create an n8n API key, store it in `.env.local` with a tracked `.env.local.example`, and verify an authenticated `GET /api/v1/workflows` (resolved 2026-11-13: GET returns 200 with the key passed to curl on stdin; template lists only `N8N_API_KEY`)
