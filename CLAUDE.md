@@ -86,8 +86,8 @@ Claude Code CLI on the Mac, plus the n8n web UI at `http://localhost:5678` (use
 - **Objective:** Claude Code on the Mac can pull workflows from n8n into `workflows/` and
   push them back over the REST API. The existing test workflow (`My workflow`, a manual
   trigger → HTTP request) is committed as the first example.
-- **Status:** Pull and push work (`scripts/pull.sh`, `scripts/push.sh`). The round-trip
-  check (T-WFC-05) remains.
+- **Status:** Done. Pull and push work (`scripts/pull.sh`, `scripts/push.sh`), and the
+  round trip (T-WFC-05) diffs clean after a run in the UI.
 - **Depends on:** Nothing. This is the first track.
 
 ### Track 2 — Transcript summary (XSUM)
@@ -123,7 +123,7 @@ confirmed unavailable, so T-XSUM-03 will poll on a schedule.
 3. Confirm `N8N_API_KEY` is set (presence only, via `printenv K >/dev/null`). Pass the
    header to curl on stdin: `printf 'header = "X-N8N-API-KEY: %s"\n' "$N8N_API_KEY" |
    curl -sS -K - <url>`. Never put it in argv.
-4. T-WFC-05 (round-trip check), then T-XSUM-03.
+4. T-XSUM-03: add the schedule trigger and skip-if-summarised to the summary workflow.
 5. Ask how the event went (on or after 2026-11-14). Its answers feed TODO.md §3.
 
 **Continuity reminders:**

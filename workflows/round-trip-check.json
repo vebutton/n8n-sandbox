@@ -1,0 +1,66 @@
+{
+  "active": false,
+  "connections": {
+    "Run manually": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Build message",
+            "type": "main"
+          }
+        ]
+      ]
+    }
+  },
+  "id": "ilur6L9EuS24lAzj",
+  "name": "Round-trip check",
+  "nodes": [
+    {
+      "id": "87885ebb-57f8-4fa4-b1a6-cb37fcd27ddf",
+      "name": "Build message",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e7457955-5454-42ce-bb5c-6cf0fd27a9a0",
+              "name": "message",
+              "type": "string",
+              "value": "=Authored in git, pushed by scripts/push.sh, run at {{ $now.toISO() }}"
+            },
+            {
+              "id": "9da4407a-3e26-4ceb-9ce1-fb2f3774d01f",
+              "name": "source",
+              "type": "string",
+              "value": "workflows/round-trip-check.json"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "position": [
+        220,
+        0
+      ],
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4
+    },
+    {
+      "id": "ec5b641a-728f-43fb-a228-436056f5fa72",
+      "name": "Run manually",
+      "parameters": {},
+      "position": [
+        0,
+        0
+      ],
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": []
+}

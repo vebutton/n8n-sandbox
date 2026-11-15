@@ -38,7 +38,7 @@
 - [x] T-WFC-02 Pull script: export every workflow from n8n into `workflows/<slug>.json`, normalised for clean diffs (resolved 2026-11-15: `scripts/pull.sh`; two consecutive pulls diff clean)
 - [x] T-WFC-03 Commit the existing manual-trigger → HTTP-request workflow as the first example (resolved 2026-11-15: `workflows/my-workflow.json`, committed with the chat-test and transcript-summary workflows)
 - [x] T-WFC-04 Push script: create or update an n8n workflow from a repo JSON file (resolved 2026-11-15: `scripts/push.sh`; create, update, conflict guard and unknown-id cases tested live; the published-workflow draft path is untested)
-- [ ] T-WFC-05 Round-trip check: author a small workflow in git, push it, run it in the UI, pull it back, and confirm a clean diff
+- [x] T-WFC-05 Round-trip check: author a small workflow in git, push it, run it in the UI, pull it back, and confirm a clean diff (resolved 2026-11-15: `workflows/round-trip-check.json` created by push, run in the UI (execution 11, success), pulled back with a clean diff)
 
 ### XSUM — Track 2: Transcript summary
 - [x] T-XSUM-01 Script the container recreate with Mac inbox/outbox bind mounts, keeping `n8n_data`, the image tag and the `127.0.0.1:5678` binding (resolved 2026-11-13: done by podmanager, which owns the instance; inbox read-only and outbox read-write under `/home/node/.n8n-files`; see `docs/n8n-instance.md`)
