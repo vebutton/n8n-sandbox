@@ -93,9 +93,9 @@ Claude Code CLI on the Mac, plus the n8n web UI at `http://localhost:5678` (use
 ### Track 2 — Transcript summary (XSUM)
 - **Objective:** a transcript dropped into the inbox is picked up by n8n, summarised by
   the local LLM, and the summary is written to the outbox.
-- **Status:** The infrastructure is ready: inbox, outbox and model credential exist.
-  Only the workflow remains (T-XSUM-03). Secondary to Track 1. If the event provides its
-  own lab sandbox, try it there too.
+- **Status:** A manual-trigger summary workflow works end to end (inbox → `oMLX local` →
+  outbox). T-XSUM-03 (schedule + skip-if-summarised) is on hold for the operator's real
+  prompt. If the event provides its own lab sandbox, try it there too.
 - **Depends on:** Track 1 (may depend). Its workflow is authored and pushed as code via
   WFC.
 
@@ -109,10 +109,12 @@ an existing track or must stand alone.
 > Forward-looking operating context only. Archaeology lives in `docs/session-state.md`.
 > Task state lives in `TODO.md`.
 
-**Last (2026-11-13):** T-WFC-01 done. Authenticated `GET /api/v1/workflows` returns 200
-with one workflow, `My workflow` (id `BUfTdWopbSCXMfMd`, inactive, manual trigger →
-HTTP Request). `.env.local.example` now lists only `N8N_API_KEY`. Local File Trigger
-confirmed unavailable, so T-XSUM-03 will poll on a schedule.
+**Last (2026-11-15):** Track 1 done (T-WFC-02..05): `scripts/pull.sh` and
+`scripts/push.sh` work, and a round trip diffs clean. Built and ran a chat test and a
+manual transcript-summary workflow on the local model. The model credential is
+`oMLX local` (renamed; the broken duplicate deleted). T-PROJ-01 closed: the public
+GitHub remote is in sync. In n8n: `My workflow`, `Chat test (local LLM)`,
+`Transcript summary (inbox to outbox)`, `Round-trip check`, all in `workflows/`.
 
 **Next session — pick up here:**
 1. Cold start: re-read CLAUDE.md, CLAUDE.local.md and `docs/n8n-instance.md`. Consult
@@ -123,10 +125,18 @@ confirmed unavailable, so T-XSUM-03 will poll on a schedule.
 3. Confirm `N8N_API_KEY` is set (presence only, via `printenv K >/dev/null`). Pass the
    header to curl on stdin: `printf 'header = "X-N8N-API-KEY: %s"\n' "$N8N_API_KEY" |
    curl -sS -K - <url>`. Never put it in argv.
-4. T-XSUM-03: add the schedule trigger and skip-if-summarised to the summary workflow.
-5. Ask how the event went (on or after 2026-11-14). Its answers feed TODO.md §3.
+4. **Remind the operator to bring the real summary prompt** they use in another project.
+   T-XSUM-03 is on hold until they share it; then build it into the summary workflow
+   with the schedule trigger and skip-if-summarised.
+5. Ask how the event went (2026-11-14; not asked yet). Its answers feed TODO.md §3.
 
 **Continuity reminders:**
+- Workflow loop: after UI edits, `scripts/pull.sh` → review WARN/stale lines → commit →
+  push. After git edits, `scripts/push.sh FILE` (refuses if n8n changed since the last
+  commit). Verify claims in TODO.md against live state (git, API) before repeating them.
+- Test leftovers: `sample-call.txt` in the inbox and `sample-call.summary.md` in the
+  outbox. Skip-if-summarised will treat that sample as done.
+- The instance runs on local time (-06:00), not UTC. Matters for schedule triggers.
 - n8n is often **stopped**. Only one Podman machine runs at a time on this host, so n8n
   goes down whenever another machine is in use.
 - File nodes may only use paths under `/home/node/.n8n-files`. The inbox is read-only,

@@ -74,3 +74,73 @@
 
 **Commits:** `faab87f` (T-WFC-01), then the end-of-session commit recording this finding.
 Session ended here. Next session starts at T-WFC-02.
+
+## 2026-11-15 — Local-LLM workflows, credential cleanup, Track 1 complete (CLI)
+
+**Done**
+- Reviewed the operator's `My workflow 2`: the "Chat" node was Respond to Chat
+  (`@n8n/n8n-nodes-langchain.chat`), not a trigger (executions 5–7 failed with "Workflow
+  must be started from a chat trigger node"). The Agent's prompt was fixed text in the
+  user-message field, and Convert to File read `json` instead of `output`.
+- Created via the API: `Chat test (local LLM)` (Chat Trigger → AI Agent, prompt
+  `{{ $json.chatInput }}`, system message in Options) and `Transcript summary (inbox to
+  outbox)` (manual → read `inbox/*.txt` → Extract from File → Basic LLM Chain → Convert
+  to File → write `outbox/<name>.summary.md`). Both ran. The summary of a 7-line sample
+  was accurate. Node versions chosen from memory (chatTrigger 1.1, chainLlm 1.5,
+  readWriteFile 1, extractFromFile 1) all load on 2.47.7. The binary `fileName`
+  expression works. Qwen emitted no `<think>` tags.
+- Credentials: two `openAiApi` credentials existed, both made in the UI on 2026-11-14.
+  `POST /credentials/{id}/test`: `OpenAI account` → `ERR_BAD_REQUEST` (axios 4xx),
+  `OpenAI account 2` → OK. The operator found the broken one lacked `http://` in the
+  Base URL and deleted it. The working one was renamed `oMLX local` via
+  `PATCH /credentials/{id}`.
+- `n8n Assistant model` is not a workflow credential. It is the model for n8n's
+  built-in Assistant (`instance-ai` module), set in the UI and pointed at oMLX. No
+  `N8N_INSTANCE_AI_*` env vars are on the container (names only). Per n8n docs ("Set up
+  n8n Assistant"), the Assistant needs a code sandbox: K8s + Sysbox, Daytona, or a
+  bundled privileged Compose stack (dev/test). Recommended skipping it: small model,
+  and Claude Code already fills the role. Recorded under TODO Unscheduled.
+- T-WFC-02: `scripts/pull.sh`. Shared code: `scripts/lib/n8n.sh` (API call, key on
+  stdin) and `scripts/lib/normalize.jq` (stored form, request body, warnings).
+- T-WFC-03: committed `My workflow` plus the two new workflows. `My workflow 2` was
+  deleted at the operator's request (archive, then `DELETE`).
+- T-WFC-04: `scripts/push.sh`, with a conflict guard against the file's last commit,
+  draft-by-default for published workflows (`--publish`), and post-push verification.
+  First real use refreshed the cached credential name in both AI workflows.
+- T-WFC-05: `Round-trip check` authored in git, pushed, run in the UI (execution 11),
+  pulled back with a clean diff. The editor added nothing on open or run.
+- T-PROJ-01: the public remote had existed since 2026-11-14, and the register was stale.
+  Closed it and pushed. Local and `origin/main` are in sync.
+
+**Decisions / reasoning**
+- Basic LLM Chain over AI Agent for summarising: the Agent's tool-calling scaffolding
+  is a poor fit for a 9B model.
+- Credential name `oMLX local`, not "OMLX Qwen": the model is picked per node, not in
+  the credential.
+- Push refuses when n8n differs from `HEAD:<file>`, because pull strips `versionId`,
+  so there is no optimistic lock to use. Verified by a forced conflict.
+- Pull skips archived workflows, reports stale files (never deletes), and moves renamed
+  workflows by id.
+
+**Verified facts (from the instance's `/api/v1/openapi.yml`)**
+- Writable workflow fields: name, nodes, connections, settings, nodeGroups, staticData,
+  pinData, description. `settings` and nodes are `additionalProperties: false`.
+- `PUT /workflows/{id}` re-publishes a published workflow unless `publishIfActive=false`.
+- Archive is a soft delete: it unpublishes and keeps executions. `DELETE` removes the
+  workflow and its executions for good.
+- `GET /credentials/{id}` returns no secret data. `/credentials/{id}/test` and
+  `/dependencies` exist.
+
+**Ruled out / not done**
+- `/types/nodes.json` for node versions: 401 without a UI session, again.
+- Draft-vs-`--publish` push path: untested, since nothing is published.
+- T-XSUM-03: held by the operator, who wants their real prompt from another project.
+
+**Corrections made**
+- I claimed T-PROJ-01 was open from the register without checking `git remote`. The
+  operator corrected it. Lesson recorded in the CLAUDE.md continuity reminders.
+- "Save the workflow in the UI": there is no Save button in 2.x (operator).
+
+**Commits:** `ceb45e1`, `6071905`, `fafe935`, `07b045a`, `427e172`, `2b82f51`,
+`9d9bdfd`, plus this end-of-session commit. All pushed.
+Session ended here. Next session: get the operator's prompt, then T-XSUM-03.

@@ -64,13 +64,17 @@
   2026-11-13). The inbox is read-only, so skip a transcript when its summary already
   exists in the outbox. Start from `workflows/transcript-summary-inbox-to-outbox.json`
   (manual trigger, works end to end) and push changes with `scripts/push.sh`.
+  **On hold (2026-11-15):** waits on the operator's real summary prompt, which they use
+  in another project. Get it from them before starting.
 
 ## 3. Open questions
 - **Where should summaries go?** The outbox is the default and now exists. Email isn't
   available (no SMTP). A note app would mean an API reached over the internet.
   → T-XSUM-03
 - **Can a small local model drive n8n's AI workflow builder at all?** Ask at the event.
-  Accepted as event research, with no item.
+  Accepted as event research, with no item. Partly answered 2026-11-15: the Assistant
+  accepts oMLX but warns that small models often build workflows that don't run, and it
+  also needs a code sandbox (see Unscheduled).
 - **What MCP options exist for Claude to drive n8n directly?** n8n as an MCP server, or
   community MCP servers. Ask at the event, since these change fast. If promising, it goes
   to Unscheduled.
