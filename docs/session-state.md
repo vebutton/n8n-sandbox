@@ -163,7 +163,7 @@ the gitignored `.atlas/overview.md` (Atlas create mode).
 **Handoff update (same day):** podmanager's 2026-11-15 handoff (`collateral/20261115-handoff.md`)
 replaced `docs/n8n-instance.md`. Changes: telemetry is off; this project's pull is now
 the workflow backup of record; credentials aren't in that backup and must be
-re-created on restore. The handoff still calls `n8n Assistant model` a credential. That
-correction is still to be raised with podmanager. `reminders/` was gitignored for
+re-created on restore. The handoff still calls `n8n Assistant model` a credential. The operator
+corrected podmanager the same day; the fix arrives with the next handoff. `reminders/` was gitignored for
 `/triage-sheet`, and the first sheet (v1) was generated.
 Session ended here. Next session: T-PRICE-01, then the macalla prompt for T-XSUM-03.
