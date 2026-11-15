@@ -86,7 +86,8 @@ Claude Code CLI on the Mac, plus the n8n web UI at `http://localhost:5678` (use
 - **Objective:** Claude Code on the Mac can pull workflows from n8n into `workflows/` and
   push them back over the REST API. The existing test workflow (`My workflow`, a manual
   trigger → HTTP request) is committed as the first example.
-- **Status:** Pull works (`scripts/pull.sh`, T-WFC-02). Push (T-WFC-04) is next.
+- **Status:** Pull and push work (`scripts/pull.sh`, `scripts/push.sh`). The round-trip
+  check (T-WFC-05) remains.
 - **Depends on:** Nothing. This is the first track.
 
 ### Track 2 — Transcript summary (XSUM)
@@ -122,7 +123,7 @@ confirmed unavailable, so T-XSUM-03 will poll on a schedule.
 3. Confirm `N8N_API_KEY` is set (presence only, via `printenv K >/dev/null`). Pass the
    header to curl on stdin: `printf 'header = "X-N8N-API-KEY: %s"\n' "$N8N_API_KEY" |
    curl -sS -K - <url>`. Never put it in argv.
-4. T-WFC-04: the push script, then T-WFC-05 (round-trip check).
+4. T-WFC-05 (round-trip check), then T-XSUM-03.
 5. Ask how the event went (on or after 2026-11-14). Its answers feed TODO.md §3.
 
 **Continuity reminders:**
@@ -138,8 +139,13 @@ confirmed unavailable, so T-XSUM-03 will poll on a schedule.
   (`http://host.containers.internal:8000/v1`). Without `http://` the credential test
   fails with `ERR_BAD_REQUEST`. `POST /api/v1/credentials/{id}/test` checks a credential
   without exposing its secrets.
-- From memory, unverified: the workflow update endpoint rejects read-only fields such as
-  `id`, `active`, `tags` and timestamps. Strip them on push (T-WFC-04).
+- Verified 2026-11-15 (the instance's `/api/v1/openapi.yml`): create/update accept only
+  `name`, `nodes`, `connections`, `settings`, `nodeGroups`, `staticData`, `pinData` and
+  `description`. `settings` and node objects reject unknown keys. Updating a published
+  workflow re-publishes it unless `publishIfActive=false`. `scripts/push.sh` handles this.
+- Observed 2026-11-15: the editor has no Save button (from memory: it autosaves drafts,
+  and Publish puts a version live). The UI offers only Archive on a live workflow;
+  archive-then-`DELETE` via the API removes it for good, executions included.
 - Exports reference credentials by ID and name, not by secret value, but pinned data and
   hard-coded node values do get exported. Check pulls before committing.
 - Secrets: `.env.local` is ansible-vault encrypted. There is no `ansible.cfg` here, so

@@ -14,58 +14,30 @@
 #   parameters. Values are never printed, only where they are.
 set -euo pipefail
 
-N8N_URL="${N8N_URL:-http://localhost:5678}"
-ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+. "$(dirname "$0")/lib/n8n.sh"
 OUT="$ROOT/workflows"
-
-printenv N8N_API_KEY >/dev/null || { echo "N8N_API_KEY is not set" >&2; exit 1; }
 
 TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
-
-api() {
-  printf 'header = "X-N8N-API-KEY: %s"\n' "$N8N_API_KEY" | curl -fsS -K - "$N8N_URL/api/v1/$1"
-}
 
 # Fetch all pages of the workflow list (it already includes nodes and connections).
 n=0 cursor=''
 while :; do
   n=$((n + 1))
-  api "workflows?limit=250${cursor:+&cursor=$cursor}" >"$TMP/page-$n.json"
+  code="$(n8n_api GET "workflows?limit=250${cursor:+&cursor=$cursor}" "$TMP/page-$n.json")"
+  [ "$code" = 200 ] || { echo "list workflows: HTTP $code $(api_error "$TMP/page-$n.json")" >&2; exit 1; }
   cursor="$(jq -r '.nextCursor // empty' "$TMP/page-$n.json")"
   [ -n "$cursor" ] || break
 done
 
 # One line per live workflow: {file, wf, warnings}. Slug collisions get the id appended.
-jq -s -c '
-  def slug: ascii_downcase | gsub("[^a-z0-9]+"; "-") | gsub("^-+|-+$"; "");
-  def secretish: type == "string"
-    and test("pass(word)?|secret|token|api[-_ ]?key|authorization|bearer|cookie"; "i");
-  def literal: type == "string" and length > 0 and (startswith("=") | not);
-  def norm: {
-      id, name, active,
-      nodes: (.nodes | sort_by(.name)),
-      connections, settings,
-      pinData: (.pinData // {}),
-      staticData,
-      tags: ([.tags[]?.name] | sort)
-    } + (if (.nodeGroups // [] | length) > 0 then {nodeGroups} else {} end);
-  def warnings: [
-      (if (.pinData // {} | length) > 0
-        then "pinned data on: \(.pinData | keys | join(", "))" else empty end),
-      (.nodes[] | .name as $n | (.parameters // {}) |
-        ( paths(scalars) as $p
-          | select(($p[-1] | secretish) and (getpath($p) | literal))
-          | "\($n): literal value at \($p | map(tostring) | join("."))" ),
-        ( .. | objects | select((.name | secretish) and (.value | literal))
-          | "\($n): literal value for \(.name)" ))
-    ] | unique;
+njq '
   [.[].data[]] | map(select(.isArchived | not))
   | map(. + {slug: ((.name | slug) as $s | if $s == "" then .id else $s end)})
   | group_by(.slug)
   | map(if length > 1 then map(.slug += "-" + .id) else . end) | add // []
   | .[] | {file: "\(.slug).json", wf: norm, warnings: warnings}
-' "$TMP"/page-*.json >"$TMP/live.jsonl"
+' -s -c "$TMP"/page-*.json >"$TMP/live.jsonl"
 
 jq -s -r '[.[].data[] | select(.isArchived) | .name] | .[] | "skipped (archived): \(.)"' \
   "$TMP"/page-*.json

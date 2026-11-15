@@ -37,7 +37,7 @@
 - [x] T-WFC-01 Create an n8n API key, store it in `.env.local` with a tracked `.env.local.example`, and verify an authenticated `GET /api/v1/workflows` (resolved 2026-11-13: GET returns 200 with the key passed to curl on stdin; template lists only `N8N_API_KEY`)
 - [x] T-WFC-02 Pull script: export every workflow from n8n into `workflows/<slug>.json`, normalised for clean diffs (resolved 2026-11-15: `scripts/pull.sh`; two consecutive pulls diff clean)
 - [x] T-WFC-03 Commit the existing manual-trigger → HTTP-request workflow as the first example (resolved 2026-11-15: `workflows/my-workflow.json`, committed with the chat-test and transcript-summary workflows)
-- [ ] T-WFC-04 Push script: create or update an n8n workflow from a repo JSON file
+- [x] T-WFC-04 Push script: create or update an n8n workflow from a repo JSON file (resolved 2026-11-15: `scripts/push.sh`; create, update, conflict guard and unknown-id cases tested live; the published-workflow draft path is untested)
 - [ ] T-WFC-05 Round-trip check: author a small workflow in git, push it, run it in the UI, pull it back, and confirm a clean diff
 
 ### XSUM — Track 2: Transcript summary
@@ -62,8 +62,8 @@
 - **T-XSUM-03:** trigger is a Schedule Trigger plus a read of the inbox folder, because
   the Local File Trigger node is not available on this instance (checked in the UI on
   2026-11-13). The inbox is read-only, so skip a transcript when its summary already
-  exists in the outbox. Waits
-  on T-WFC-04.
+  exists in the outbox. Start from `workflows/transcript-summary-inbox-to-outbox.json`
+  (manual trigger, works end to end) and push changes with `scripts/push.sh`.
 
 ## 3. Open questions
 - **Where should summaries go?** The outbox is the default and now exists. Email isn't
